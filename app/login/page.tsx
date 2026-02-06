@@ -2,7 +2,7 @@ import { LoginForm } from "@/components/Login/LoginForm";
 import { BookOpen } from "lucide-react";
 import Link from "next/link";
 
-export default function Login() {
+export default async function Login() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-white">
       <div className="w-full max-w-sm">

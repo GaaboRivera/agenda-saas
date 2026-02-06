@@ -7,21 +7,49 @@ import { useRouter } from "next/navigation";
 
 export const LoginForm = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [textError, setTextError] = useState("");
   const router = useRouter();
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setIsLoading(true);
     // Simula una llamada a la API
-    setTimeout(() => {
+
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+
+    try {
+      const result = await fetch("/api/signin", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await result.json();
+
+      if (!data.success) {
+        setIsLoading(false);
+        setTextError("Correo electrónico o contraseña incorrectos.");
+      } else {
+        setIsLoading(false);
+        setTextError("");
+        router.push("/dashboard");
+      }
+    } catch (error) {
       setIsLoading(false);
-      router.push("/dashboard");
-    }, 2000);
+
+      setTextError(
+        "Ocurrió un error. Por favor, inténtalo de nuevo más tarde.",
+      );
+    }
   }
   return (
     <form onSubmit={onSubmit} className="space-y-4">
       <Input
         id="email"
+        name="email"
         placeholder="Correo electronico"
         required
         type="email"
@@ -29,6 +57,7 @@ export const LoginForm = () => {
       />
       <Input
         id="password"
+        name="password"
         placeholder="Contrasena"
         required
         type="password"
@@ -45,6 +74,7 @@ export const LoginForm = () => {
           "Iniciar sesión"
         )}
       </Button>
+      {textError !== "" && <p className="text-red-500 text-sm">{textError}</p>}
     </form>
   );
 };

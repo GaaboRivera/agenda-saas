@@ -25,6 +25,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useRouter } from "next/navigation";
 
 const navItems = [
   { label: "Panel", icon: LayoutDashboard, active: true },
@@ -34,7 +35,13 @@ const navItems = [
   { label: "Configuracion", icon: Settings, active: false },
 ];
 
-export function TopNav() {
+interface TopNavProps {
+  name: string;
+  email: string;
+}
+
+export function TopNav({ name, email }: TopNavProps) {
+  const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -92,7 +99,7 @@ export function TopNav() {
               >
                 <Avatar className="h-9 w-9">
                   <AvatarFallback className="bg-primary/20 text-primary text-sm font-semibold">
-                    AD
+                    {name.charAt(0)}
                   </AvatarFallback>
                 </Avatar>
               </Button>
@@ -100,10 +107,8 @@ export function TopNav() {
             <DropdownMenuContent className="w-56" align="end">
               <DropdownMenuLabel>
                 <div className="flex flex-col gap-1">
-                  <p className="text-sm font-medium">Admin Demo</p>
-                  <p className="text-xs text-muted-foreground">
-                    admin@phonebookpro.com
-                  </p>
+                  <p className="text-sm font-medium">{name}</p>
+                  <p className="text-xs text-muted-foreground">{email}</p>
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
@@ -111,7 +116,16 @@ export function TopNav() {
               <DropdownMenuItem>Facturacion</DropdownMenuItem>
               <DropdownMenuItem>Soporte</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-destructive">
+              <DropdownMenuItem
+                className="text-destructive"
+                onClick={async () => {
+                  const result = await fetch("/api/signout", {
+                    method: "POST",
+                  });
+                  const data = await result.json();
+                  if (data.success) router.push("/");
+                }}
+              >
                 Cerrar sesion
               </DropdownMenuItem>
             </DropdownMenuContent>

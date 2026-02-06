@@ -1,10 +1,10 @@
-"use client";
 import { TopNav } from "@/components/dashboard/TopNav";
 import { StatsCards } from "@/components/dashboard/StatsCards";
 import { CallsChart } from "@/components/dashboard/CallsChart";
 import { ContactsTable } from "@/components/dashboard/ContactsTable";
 import { RecentActivity } from "@/components/dashboard/RecentActivity";
 import { SubscriptionCard } from "@/components/dashboard/SubscriptionCard";
+import { cookies } from "next/headers";
 
 const dashboardThemeVars: Record<string, string> = {
   "--background": "224 20% 7%",
@@ -34,19 +34,27 @@ const dashboardThemeVars: Record<string, string> = {
   "--radius": "0.625rem",
 };
 
-export default function Page() {
+export default async function DashboardPage() {
+  const cookiesHandler = await cookies();
+  const usernameCookie = cookiesHandler.get("username");
+  const username = usernameCookie ? JSON.parse(usernameCookie.value) : null;
+
   return (
     <div
       style={dashboardThemeVars as React.CSSProperties}
       className="min-h-screen bg-background text-foreground font-sans antialiased"
     >
       <div className="min-h-screen bg-background text-foreground">
-        <TopNav />
+        <TopNav
+          name={username ? `${username.name} ${username.lastname}` : "Invitado"}
+          email={username ? username.email : ""}
+        />
         <main className="p-4 lg:p-6">
           {/* Encabezado */}
           <div className="mb-6">
             <h1 className="text-2xl font-bold text-foreground text-balance">
-              Panel de Administracion
+              Panel de Administracion -{" "}
+              {username ? `${username.name} ${username.lastname}` : "Invitado"}
             </h1>
             <p className="text-sm text-muted-foreground mt-1">
               Resumen general de tu servicio de agenda telefonica
