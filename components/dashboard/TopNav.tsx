@@ -25,7 +25,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useRouter } from "next/navigation";
+import { signoutAction } from "@/server/auth/auth";
 
 const navItems = [
   { label: "Panel", icon: LayoutDashboard, active: true },
@@ -41,7 +41,6 @@ interface TopNavProps {
 }
 
 export function TopNav({ name, email }: TopNavProps) {
-  const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -118,13 +117,7 @@ export function TopNav({ name, email }: TopNavProps) {
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 className="text-destructive"
-                onClick={async () => {
-                  const result = await fetch("/api/signout", {
-                    method: "POST",
-                  });
-                  const data = await result.json();
-                  if (data.success) router.push("/");
-                }}
+                onClick={signoutAction}
               >
                 Cerrar sesion
               </DropdownMenuItem>
