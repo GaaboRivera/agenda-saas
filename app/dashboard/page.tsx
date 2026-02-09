@@ -4,7 +4,6 @@ import { CallsChart } from "@/components/dashboard/CallsChart";
 import { ContactsTable } from "@/components/dashboard/ContactsTable";
 import { RecentActivity } from "@/components/dashboard/RecentActivity";
 import { SubscriptionCard } from "@/components/dashboard/SubscriptionCard";
-import { cookies } from "next/headers";
 
 const dashboardThemeVars: Record<string, string> = {
   "--background": "224 20% 7%",
@@ -35,26 +34,18 @@ const dashboardThemeVars: Record<string, string> = {
 };
 
 export default async function DashboardPage() {
-  const cookiesHandler = await cookies();
-  const usernameCookie = cookiesHandler.get("username");
-  const username = usernameCookie ? JSON.parse(usernameCookie.value) : null;
-
   return (
     <div
       style={dashboardThemeVars as React.CSSProperties}
       className="min-h-screen bg-background text-foreground font-sans antialiased"
     >
       <div className="min-h-screen bg-background text-foreground">
-        <TopNav
-          name={username ? `${username.name} ${username.lastname}` : "Invitado"}
-          email={username ? username.email : ""}
-        />
+        <TopNav email={"gabo.grm27@gmail.com"} />
         <main className="p-4 lg:p-6">
           {/* Encabezado */}
           <div className="mb-6">
             <h1 className="text-2xl font-bold text-foreground text-balance">
-              Panel de Administracion -{" "}
-              {username ? `${username.name} ${username.lastname}` : "Invitado"}
+              Panel de Administracion - Invitado
             </h1>
             <p className="text-sm text-muted-foreground mt-1">
               Resumen general de tu servicio de agenda telefonica

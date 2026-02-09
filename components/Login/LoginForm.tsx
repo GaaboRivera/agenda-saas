@@ -1,12 +1,12 @@
 "use client";
 import { useState } from "react";
 
-import { signinAction } from "@/server/auth/auth";
 import { Loader2 } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { login } from "@/server/login/actions";
 
 export const LoginForm = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -20,9 +20,9 @@ export const LoginForm = () => {
     const password = formData.get("password") as string;
 
     // Simula una llamada a la API
-    await signinAction(email, password);
+    const resp = await login(email, password);
 
-    toast.error("Correo o contraseña incorrectos");
+    toast.error(resp.message);
     setIsLoading(false);
   }
 

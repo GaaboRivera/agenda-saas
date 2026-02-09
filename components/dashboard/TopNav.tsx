@@ -25,7 +25,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { signoutAction } from "@/server/auth/auth";
+import { logout } from "@/server/login/actions";
 
 const navItems = [
   { label: "Panel", icon: LayoutDashboard, active: true },
@@ -36,11 +36,10 @@ const navItems = [
 ];
 
 interface TopNavProps {
-  name: string;
   email: string;
 }
 
-export function TopNav({ name, email }: TopNavProps) {
+export function TopNav({ email }: TopNavProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -98,7 +97,7 @@ export function TopNav({ name, email }: TopNavProps) {
               >
                 <Avatar className="h-9 w-9">
                   <AvatarFallback className="bg-primary/20 text-primary text-sm font-semibold">
-                    {name.charAt(0)}
+                    {email.charAt(0).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
               </Button>
@@ -106,7 +105,7 @@ export function TopNav({ name, email }: TopNavProps) {
             <DropdownMenuContent className="w-56" align="end">
               <DropdownMenuLabel>
                 <div className="flex flex-col gap-1">
-                  <p className="text-sm font-medium">{name}</p>
+                  <p className="text-sm font-medium">{email}</p>
                   <p className="text-xs text-muted-foreground">{email}</p>
                 </div>
               </DropdownMenuLabel>
@@ -115,10 +114,7 @@ export function TopNav({ name, email }: TopNavProps) {
               <DropdownMenuItem>Facturacion</DropdownMenuItem>
               <DropdownMenuItem>Soporte</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem
-                className="text-destructive"
-                onClick={signoutAction}
-              >
+              <DropdownMenuItem className="text-destructive" onClick={logout}>
                 Cerrar sesion
               </DropdownMenuItem>
             </DropdownMenuContent>
