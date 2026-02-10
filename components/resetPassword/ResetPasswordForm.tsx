@@ -6,9 +6,10 @@ import { Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { login } from "@/server/login/actions";
+import { setNewPassword } from "@/server/login/actions";
+import { redirect } from "next/navigation";
 
-export const LoginForm = () => {
+export const ResetPasswordForm = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -16,30 +17,37 @@ export const LoginForm = () => {
     setIsLoading(true);
 
     const formData = new FormData(e.currentTarget);
-    const email = formData.get("email") as string;
+
     const password = formData.get("password") as string;
+    const confirmPassword = formData.get("confirm-password") as string;
 
-    // Simula una llamada a la API
-    const resp = await login(email, password);
+    if (password !== confirmPassword) {
+      toast.error("Las contraseñas no coinciden");
+      setIsLoading(false);
+      return;
+    }
 
-    toast.error(resp.message);
+    // llamada a la API para restablecer la contraseña
+    await setNewPassword(password);
+
     setIsLoading(false);
+    toast.success("Contraseña restablecida correctamente");
   }
 
   return (
     <form onSubmit={onSubmit} className="space-y-4 ">
       <Input
-        id="email"
-        name="email"
-        placeholder="Correo electronico"
-        required
-        type="email"
-        className="w-full"
-      />
-      <Input
         id="password"
         name="password"
         placeholder="Contraseña"
+        required
+        type="password"
+        className="w-full"
+      />
+      <Input
+        id="confirm-password"
+        name="confirm-password"
+        placeholder="Confirmar Contraseña"
         required
         type="password"
         className="w-full"
@@ -52,7 +60,7 @@ export const LoginForm = () => {
         {isLoading ? (
           <Loader2 className="h-4 w-4 animate-spin" />
         ) : (
-          "Iniciar sesión"
+          "Restablecer contraseña"
         )}
       </Button>
     </form>

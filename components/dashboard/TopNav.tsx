@@ -26,9 +26,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { logout } from "@/server/login/actions";
+import Link from "next/link";
 
 const navItems = [
-  { label: "Panel", icon: LayoutDashboard, active: true },
+  { label: "Panel", icon: LayoutDashboard, active: false },
   { label: "Contactos", icon: Users, active: false },
   { label: "Historial", icon: Clock, active: false },
   { label: "Suscripciones", icon: CreditCard, active: false },
@@ -37,9 +38,10 @@ const navItems = [
 
 interface TopNavProps {
   email: string;
+  name: string;
 }
 
-export function TopNav({ email }: TopNavProps) {
+export function TopNav({ email, name }: TopNavProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -58,17 +60,16 @@ export function TopNav({ email }: TopNavProps) {
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-1">
           {navItems.map((item) => (
-            <button
-              key={item.label}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                item.active
-                  ? "bg-primary/10 text-primary"
-                  : "text-muted-foreground hover:text-foreground hover:bg-secondary"
-              }`}
-            >
-              <item.icon className="h-4 w-4" />
-              {item.label}
-            </button>
+            <Link href="/dashboard" key={item.label}>
+              <Button
+                className={`cursor-pointer flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  item.active ? "bg-primary/10 text-primary" : ""
+                }`}
+              >
+                <item.icon className="h-4 w-4" />
+                {item.label}
+              </Button>
+            </Link>
           ))}
         </nav>
 
@@ -97,7 +98,7 @@ export function TopNav({ email }: TopNavProps) {
               >
                 <Avatar className="h-9 w-9">
                   <AvatarFallback className="bg-primary/20 text-primary text-sm font-semibold">
-                    {email.charAt(0).toUpperCase()}
+                    {name.charAt(0).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
               </Button>
@@ -106,11 +107,13 @@ export function TopNav({ email }: TopNavProps) {
               <DropdownMenuLabel>
                 <div className="flex flex-col gap-1">
                   <p className="text-sm font-medium">{email}</p>
-                  <p className="text-xs text-muted-foreground">{email}</p>
+                  <p className="text-xs text-muted-foreground">{name}</p>
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Mi perfil</DropdownMenuItem>
+              <Link href="/dashboard/profile">
+                <DropdownMenuItem>Mi perfil</DropdownMenuItem>
+              </Link>
               <DropdownMenuItem>Facturacion</DropdownMenuItem>
               <DropdownMenuItem>Soporte</DropdownMenuItem>
               <DropdownMenuSeparator />

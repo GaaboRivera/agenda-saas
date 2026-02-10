@@ -1,14 +1,12 @@
 "use client";
-import { useState } from "react";
-
 import { Loader2 } from "lucide-react";
-
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
 import { toast } from "sonner";
-import { login } from "@/server/login/actions";
+import { useState } from "react";
+import { signup } from "@/server/login/actions";
 
-export const LoginForm = () => {
+export const RegisterForm = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -18,9 +16,16 @@ export const LoginForm = () => {
     const formData = new FormData(e.currentTarget);
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
+    const confirmPassword = formData.get("confirm-password") as string;
+
+    if (password !== confirmPassword) {
+      toast.error("Las contraseñas no coinciden");
+      setIsLoading(false);
+      return;
+    }
 
     // Simula una llamada a la API
-    const resp = await login(email, password);
+    const resp = await signup(email, password);
 
     toast.error(resp.message);
     setIsLoading(false);
@@ -44,6 +49,14 @@ export const LoginForm = () => {
         type="password"
         className="w-full"
       />
+      <Input
+        id="confirm-password"
+        name="confirm-password"
+        placeholder="Confirmar Contraseña"
+        required
+        type="password"
+        className="w-full"
+      />
       <Button
         className="w-full bg-gray-800 hover:bg-gray-700 text-white cursor-pointer"
         type="submit"
@@ -52,7 +65,7 @@ export const LoginForm = () => {
         {isLoading ? (
           <Loader2 className="h-4 w-4 animate-spin" />
         ) : (
-          "Iniciar sesión"
+          "Registrarse"
         )}
       </Button>
     </form>

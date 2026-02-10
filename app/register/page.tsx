@@ -1,8 +1,8 @@
-import { LoginForm } from "@/components/Login/LoginForm";
+import { RegisterForm } from "@/components/register/RegisterForm";
 import { BookOpen } from "lucide-react";
 import Link from "next/link";
 
-export default async function Login() {
+export default async function Register() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-white">
       <div className="w-full max-w-sm">
@@ -21,13 +21,13 @@ export default async function Login() {
             </div>
           </div>
         </Link>
-        <LoginForm />
+        <RegisterForm />
         <div className="text-center p-5">
           <Link
-            href="/register"
+            href="/login"
             className="text-sm text-blue-400 hover:text-blue-500 hover:underline"
           >
-            Crear una cuenta? Registrate
+            Ya tienes una cuenta? Inicia Sesion
           </Link>
         </div>
       </div>
