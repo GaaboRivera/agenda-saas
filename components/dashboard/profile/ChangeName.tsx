@@ -1,7 +1,7 @@
 "use client";
+import { updateUser } from "@/actions/auth/update-user";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { changeNameProfile } from "@/server/login/actions";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -14,7 +14,7 @@ export const ChangeName = ({ name }: ChangeNameProps) => {
 
   const handleChangeName = async () => {
     // Lógica para cambiar el nombre del usuario
-    await changeNameProfile(newName);
+    await updateUser(newName);
     toast.success("Nombre cambiado exitosamente");
   };
 

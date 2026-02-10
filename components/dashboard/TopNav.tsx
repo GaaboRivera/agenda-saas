@@ -25,7 +25,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { logout } from "@/server/login/actions";
 import Link from "next/link";
 
 const navItems = [
@@ -117,8 +116,12 @@ export function TopNav({ email, name }: TopNavProps) {
               <DropdownMenuItem>Facturacion</DropdownMenuItem>
               <DropdownMenuItem>Soporte</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-destructive" onClick={logout}>
-                Cerrar sesion
+              <DropdownMenuItem className="text-destructive">
+                <form action="/api/auth/signout" method="post">
+                  <button className="button block" type="submit">
+                    Cerrar sesión
+                  </button>
+                </form>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

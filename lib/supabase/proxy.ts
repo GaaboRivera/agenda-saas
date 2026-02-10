@@ -1,4 +1,5 @@
-import { createServerClient } from "@supabase/ssr";
+import { getUser } from "@/actions/auth/get-user";
+// import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function updateSession(request: NextRequest) {
@@ -6,46 +7,41 @@ export async function updateSession(request: NextRequest) {
     request,
   });
 
-  // With Fluid compute, don't put this client in a global environment
-  // variable. Always create a new one on each request.
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll();
-        },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value }) =>
-            request.cookies.set(name, value),
-          );
-          supabaseResponse = NextResponse.next({
-            request,
-          });
-          cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options),
-          );
-        },
-      },
-    },
-  );
+  // const supabase = createServerClient(
+  //   process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  //   process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
+  //   {
+  //     cookies: {
+  //       getAll() {
+  //         return request.cookies.getAll();
+  //       },
+  //       setAll(cookiesToSet) {
+  //         cookiesToSet.forEach(({ name, value, options }) =>
+  //           request.cookies.set(name, value),
+  //         );
+  //         supabaseResponse = NextResponse.next({
+  //           request,
+  //         });
+  //         cookiesToSet.forEach(({ name, value, options }) =>
+  //           supabaseResponse.cookies.set(name, value, options),
+  //         );
+  //       },
+  //     },
+  //   },
+  // );
 
-  const { data } = await supabase.auth.getClaims();
-  const user = data?.claims;
+  // refreshing the auth token
+  const user = await getUser();
+  const protectedRoutes = ["/dashboard"];
 
-  if (user === null && request.nextUrl.pathname.startsWith("/dashboard")) {
-    // no user, potentially respond by redirecting the user to the login page
-    const url = request.nextUrl.clone();
-    url.pathname = "/login";
-    return NextResponse.redirect(url);
+  // Si no hay usuario y la ruta es protegida, redirigir al inicio
+  if (!user && protectedRoutes.includes(request.nextUrl.pathname)) {
+    return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  if (user && request.nextUrl.pathname.startsWith("/login")) {
-    // no user, potentially respond by redirecting the user to the login page
-    const url = request.nextUrl.clone();
-    url.pathname = "/dashboard";
-    return NextResponse.redirect(url);
+  // Si hay usuario y la ruta es la raíz, redirigir al dashboard
+  if (user && request.nextUrl.pathname === "/login") {
+    return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
   return supabaseResponse;

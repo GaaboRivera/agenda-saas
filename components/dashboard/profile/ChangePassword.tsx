@@ -1,20 +1,20 @@
 "use client";
 
+import { sendRecoveryEmail } from "@/actions/auth/auth";
 import { Button } from "@/components/ui/button";
-import { resetPassword } from "@/server/login/actions";
 import { toast } from "sonner";
 
-export const ChangePassword = () => {
+interface ChangePasswordProps {
+  email: string;
+}
+
+export const ChangePassword = (email: ChangePasswordProps) => {
   const handleResetPassword = async () => {
-    const host = window.location.origin;
-
     // Lógica para cambiar la contraseña del usuario
-    const result = await resetPassword(host);
+    const result = await sendRecoveryEmail(email);
 
-    if (result)
-      toast.success("Se ha enviado un correo para restablecer la contraseña");
-    else
-      toast.error("No se pudo enviar el correo para restablecer la contraseña");
+    if (result.success) toast.success(result.message);
+    else toast.error(result.message);
   };
   return (
     <div className="my-5">
