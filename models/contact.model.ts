@@ -7,6 +7,7 @@ export interface ContactModel {
   email: string;
   age: number;
   user_id: string;
+  is_favorite: boolean;
 }
 
 export interface ContactCreateModel {
@@ -15,4 +16,13 @@ export interface ContactCreateModel {
   phone: string;
   email: string;
   age: number;
+}
+
+export interface ContactUpdateModel {
+  name: string;
+  last_name: string;
+  phone: string;
+  email: string;
+  age: number;
+  is_favorite: boolean;
 }

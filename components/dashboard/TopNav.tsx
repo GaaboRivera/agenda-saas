@@ -28,11 +28,24 @@ import {
 import Link from "next/link";
 
 const navItems = [
-  { label: "Panel", icon: LayoutDashboard, active: false, url: "/dashboard" },
-  { label: "Contactos", icon: Users, active: false, url: "/dashboard/contacts" },
-  { label: "Historial", icon: Clock, active: false, url: "/dashboard" },
-  { label: "Suscripciones", icon: CreditCard, active: false, url: "/dashboard" },
-  { label: "Configuracion", icon: Settings, active: false, url: "/dashboard" },
+  {
+    label: "Dashboard",
+    icon: LayoutDashboard,
+    active: false,
+    url: "/dashboard",
+  },
+  {
+    label: "Contactos",
+    icon: Users,
+    active: false,
+    url: "/dashboard/contacts",
+  },
+  {
+    label: "Favoritos",
+    icon: Settings,
+    active: false,
+    url: "/dashboard/favorites",
+  },
 ];
 
 interface TopNavProps {

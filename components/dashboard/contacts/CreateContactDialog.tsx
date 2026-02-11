@@ -15,8 +15,16 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { create } from "domain";
 import { useState } from "react";
+import { toast } from "sonner";
 
-export function CreateContactDialog() {
+interface CreateContactDialogProps {
+  // Define any props if needed
+  getContacts: () => Promise<void>;
+}
+
+export function CreateContactDialog({ getContacts }: CreateContactDialogProps) {
+  const [loading, setLoading] = useState<boolean>(false);
+  const [showDialog, setShowDialog] = useState<boolean>(false);
   const [informacion, setInformacion] = useState({
     name: "",
     last_name: "",
@@ -27,11 +35,24 @@ export function CreateContactDialog() {
 
   const handleSaveNewContact = async (e: React.FormEvent) => {
     // Aquí puedes agregar la lógica para enviar la información al servidor o a tu base de datos
+    setLoading(true);
     await createNewContact(informacion);
+    await getContacts();
+    setInformacion({
+      name: "",
+      last_name: "",
+      phone: "",
+      email: "",
+      age: 0,
+    });
+
+    setLoading(false);
+    setShowDialog(false);
+    toast.success("Contacto creado exitosamente"); // Mostrar un mensaje de éxito al crear el contacto
   };
 
   return (
-    <Dialog>
+    <Dialog open={showDialog} onOpenChange={setShowDialog}>
       <DialogTrigger asChild>
         <Button type="button">Agregar contacto</Button>
       </DialogTrigger>
@@ -117,8 +138,12 @@ export function CreateContactDialog() {
           </Field>
         </FieldGroup>
         <DialogFooter>
-          <Button type="button" onClick={handleSaveNewContact}>
-            Save changes
+          <Button
+            type="button"
+            onClick={handleSaveNewContact}
+            disabled={loading}
+          >
+            {loading ? "Saving..." : "Save changes"}
           </Button>
         </DialogFooter>
       </DialogContent>
