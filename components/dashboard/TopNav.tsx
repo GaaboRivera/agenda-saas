@@ -28,11 +28,11 @@ import {
 import Link from "next/link";
 
 const navItems = [
-  { label: "Panel", icon: LayoutDashboard, active: false },
-  { label: "Contactos", icon: Users, active: false },
-  { label: "Historial", icon: Clock, active: false },
-  { label: "Suscripciones", icon: CreditCard, active: false },
-  { label: "Configuracion", icon: Settings, active: false },
+  { label: "Panel", icon: LayoutDashboard, active: false, url: "/dashboard" },
+  { label: "Contactos", icon: Users, active: false, url: "/dashboard/contacts" },
+  { label: "Historial", icon: Clock, active: false, url: "/dashboard" },
+  { label: "Suscripciones", icon: CreditCard, active: false, url: "/dashboard" },
+  { label: "Configuracion", icon: Settings, active: false, url: "/dashboard" },
 ];
 
 interface TopNavProps {
@@ -59,7 +59,7 @@ export function TopNav({ email, name }: TopNavProps) {
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-1">
           {navItems.map((item) => (
-            <Link href="/dashboard" key={item.label}>
+            <Link href={item.url} key={item.label}>
               <Button
                 className={`cursor-pointer flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                   item.active ? "bg-primary/10 text-primary" : ""
